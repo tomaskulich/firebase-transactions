@@ -110,6 +110,7 @@ export function transactor(firebase, handlers) {
         logTrSummary(id, 'try')
         return handler({
           set: userSet,
+          push: userPush,
           read: userRead,
           abort: userAbort
         }, data)
@@ -210,6 +211,11 @@ export function transactor(firebase, handlers) {
       runs[id].abortMsg = msg
       runs[id].status = 'useraborted'
       throw new UserAbort(msg)
+    }
+
+    function userPush(path, value) {
+      let id = firebase.push().key()
+      userSet([...path, id], value)
     }
 
   }
